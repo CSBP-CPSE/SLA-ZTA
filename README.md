@@ -34,21 +34,21 @@ First, install `SLA-ZTA`:
 $ pip install https://github.com/CSBP-CPSE/SLA-ZTA
 ```
 
-Import the package into your program and call the clustering function as follows.  
+Import the package into your program and call the clustering function as in the following example, using the default values for each variable:  
 
 ```
 from SLA-ZTA import SLA
 
-SLA.main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90)
+SLA.main(test.csv, 4574, 0, 2500, 0.75, 0.90)
 ```
 
-The variables required to run the program are:
+The variables required to run the program are, in this order:
 * inputFile - a CSV file with three columns: RES, POW, and TotalFlow. Original RES and POW codes should be mapped to numbers from 1 to the total number of areas.
 * numberOfAreas - integer value of highest area present in input file
 * lowestPopulation - smallest population eligible to be a successful cluster, and value associated with highest required self-containment. Default 0.
 * highestPopulation - largest population, used only for setting highest self-containment endpoint. Default 25,000.
 * lowestSelfContainment - the lowest level of self-containment required for a cluster to be considered viable. Applies to the area with the highest population by default. Default 0.75.
-* highestSelfContainment - the highest level of self-containment required for a cluster to be considered viable. Applies to the area with the lowest population by default. Default 0.75.
+* highestSelfContainment - the highest level of self-containment required for a cluster to be considered viable. Applies to the area with the lowest population by default. Default 0.90.
 
-This code is created and maintained by the Centre for Special Business Projects, Statistics Canada
+This code is created and maintained by the Centre for Special Business Projects, Statistics Canada.
 
