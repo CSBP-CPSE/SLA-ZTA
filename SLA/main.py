@@ -16,11 +16,11 @@ highSelf = .90          #self-containment required for small areas"""
 highestPop = 25000      #highest population threshold"""
 lowSelf = .75           #lowest self-containment required"""
 
-minFlow = 20
-fname = 'clusters_20plus_NoCMACAConnections_2016'
+minFlow = 0            #Default smallest flow considered
+fname = 'flows'        #Default name for CSV file containing flows
 
 slope = (-highSelf+lowSelf)/(highestPop - lowestPop)      #The decrease in required self-containment as areas grow smaller. """
-modifier = highSelf - (slope*lowestPop)                        #A modifier that's always equal to the highest level of self-containment if the lowest threshold is 0. """
+modifier = highSelf - (slope*lowestPop)                   #A modifier that's always equal to the highest level of self-containment if the lowest threshold is 0. """
 
 nextUnsuccessfulArea = 0
 eligibleTypes = [0, 2]
