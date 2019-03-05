@@ -8,8 +8,12 @@ A self-contained labour area is a territorial unit where most of the residents w
 ## Zones de travail autonomes (ZTA)
 Une zone de travail  autonome est une unité territoriale où la plupart des résidents employés  travaillent dans la zone délimitée et où la plupart des emplois sont occupés  par des résidents de cette zone.
 
+## 2016 Self-contained labour areas (SLA)
+
+For the newest iteration of the SLA project using 2016 Census of Population data, it was decided to use only rural flows in order to both better align the SLA system with other standard geographies and provide more information on labour markets outside of Census Metropolitan Areas (CMAs) and Census Agglomerations (CAs). The graphic below shows the final result.
+
 <p align="center">
-  <img src="./img/example.png" alt="SLA example"
+  <img src="./img/SLA_2016_Rural Only.png" alt="SLA example"
        width="654" height="540">
 </p>
 
