@@ -5,7 +5,7 @@ The SLA system attempts to group all municipalities in Canada into an SLA. Howev
 The result of this is that the initial output of the SLA system does not cover the entirety of Canada. This issue can be seen on the map below, where all the white areas represent municipalities that were excluded from the SLA system for one reason or another.
 
 <p align="center">
-  <img src="./img/example.png" alt="SLA example"
+  <img src="../img/example.png" alt="SLA example"
        width="654" height="540">
 </p>
 
