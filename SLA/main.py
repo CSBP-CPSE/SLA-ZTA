@@ -29,6 +29,8 @@ ineligibleTypes = [1, 4]
 
 removedAreas = []
 noMatch = []
+idList = []
+
 """TYPES:
     0 - not clustered
     1 - clustered CSD
@@ -36,8 +38,17 @@ noMatch = []
     4 - clustered cluster, used for tracking"""
 
 def runSLAs():
-    global areaArray, noMatch,k, inputName
+    global areaArray, noMatch,k, inputName, idList, endArea, lastClusterID
     input_file = csv.DictReader(open(inputName))
+
+    idList = []
+    for row in input_file:
+        resA = int(row["RES"])
+        powA = int(row["POW"])
+        if resA not in idList: idList.append(resA)
+        if powA not in idList: idList.append(powA)
+    idList = sorted(idList)
+    endArea, lastClusterID = len(idList), len(idList)
 
     areaArray = []
     for i in range(1, endArea+1):       #Create an empty array for the flows and populate it with empty dictionary objects
@@ -45,10 +56,12 @@ def runSLAs():
         areaArray.append(pDict)
         for j in range(1, endArea+1):       pDict[j] = 0
 
+    input_file = csv.DictReader(open(inputName))
     for row in input_file:              #Fill the dictionary with information from the relevant flows
-        resA = int(row["RES"])
-        powA = int(row["POW"])
+        resA = idList.index(int(row["RES"])) + 1
+        powA = idList.index(int(row["POW"])) + 1
         flow = int(row["TotalFlow"])
+
         if flow < minFlow: flow = 0
         resDict = areaArray[resA - 1]
         powDict = areaArray[powA - 1]
@@ -65,7 +78,6 @@ def runSLAs():
         resDict[powA] = flow
         if(resA == powA): resDict["RW"] += flow
         powDict["WELF"] += flow
-
 
     if outputFilesB: outputFiles()
     numReps = 5000
@@ -86,14 +98,17 @@ def runSLAs():
     print "done!", lastClusterID, tracking
 
 def outputClusters():
+    global idList
     filename = fname + '.csv'
     f = open(filename,'w')
-    line = "area,type,cluster,succeeded,RELF,WELF,RW,SEEKING,MATCH"
+    line = "area,code,type,cluster,succeeded,RELF,WELF,RW,SEEKING,MATCH"
     f.write(line +'\n')
 
     for a in range(0, len(areaArray)):
         newA = areaArray[a]
         area = a+1
+        code = 0
+        if(area < len(idList) + 1):      code = idList[area-1]
         type = newA["TYPE"]
         cluster = newA["CLUSTER"]
         succeeded = newA["SUCCEEDED"]
@@ -103,19 +118,21 @@ def outputClusters():
         RW = newA["RW"]
         AREAA = newA["AREAA"]
         AREAB = newA["AREAB"]
-        line = str(area) + "," + str(type)  + "," + str(cluster) + "," + str(succeeded) + "," + str(RELF) + "," + str(WELF) + "," + str(RW) + "," + str(AREAA) + "," + str(AREAB)
+        line = str(area) + "," + str(code) + ","  + str(type)  + "," + str(cluster) + "," + str(succeeded) + "," + str(RELF) + "," + str(WELF) + "," + str(RW) + "," + str(AREAA) + "," + str(AREAB)
         f.write(line)
         f.write('\n')
     f.close()
 
     filename = fname + '_CSDS.csv'
     f = open(filename,'w')
-    line = "area,type,cluster,succeeded,RELF,WELF,RW,CMA"
+    line = "area,code,type,cluster,succeeded,RELF,WELF,RW,CMA"
     f.write(line +'\n')
 
     for a in range(0, len(areaArray)):
         newA = areaArray[a]
         area = a+1
+        code = 0
+        if(area < len(idList) + 1):      code = idList[area-1]
         type = newA["TYPE"]
         cluster = newA["CLUSTER"]
         succeeded = newA["SUCCEEDED"]
@@ -124,7 +141,7 @@ def outputClusters():
         WELF = newA["WELF"]
         RW = newA["RW"]
         if(type == 0 or type == 1):
-            line = str(area) + "," + str(type)  + "," + str(cluster) + "," + str(succeeded) + "," + str(RELF) + "," + str(WELF) + "," + str(RW) + "," + str(newA["CMA"])
+            line = str(area) + "," + str(code) +  "," +  str(type)  + "," + str(cluster) + "," + str(succeeded) + "," + str(RELF) + "," + str(WELF) + "," + str(RW) + "," + str(newA["CMA"])
             f.write(line)
             f.write('\n')
     f.close()
@@ -338,10 +355,9 @@ def outputFiles():
 
     f.close()
 
-def main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90, outputName = "SLA", minimumFlow = 20):
+def main(inputFile, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90, outputName = "SLA_2016", minimumFlow = 20):
     global inputName, endArea, lastClusterID, lowestPop, highestPop, lowSelf, highSelf, fname, minFlow, slope, modifier
     inputName = inputFile
-    endArea, lastClusterID = numberOfAreas, numberOfAreas
     lowestPop = lowestPopulation
     highestPop = highestPopulation
     lowSelf = lowestSelfContainment
@@ -353,5 +369,3 @@ def main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, 
     modifier = highSelf - (slope*lowestPop)
 
     runSLAs()
-
-main("ACSDflowsCSV_2011.csv", 3216)
