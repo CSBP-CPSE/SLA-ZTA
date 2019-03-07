@@ -355,7 +355,7 @@ def outputFiles():
 
     f.close()
 
-def main(inputFile, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90, outputName = "SLA_2016", minimumFlow = 20):
+def main(inputFile, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90, outputName = "SLA", minimumFlow = 20):
     global inputName, endArea, lastClusterID, lowestPop, highestPop, lowSelf, highSelf, fname, minFlow, slope, modifier
     inputName = inputFile
     lowestPop = lowestPopulation
