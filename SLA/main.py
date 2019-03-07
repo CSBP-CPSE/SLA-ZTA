@@ -16,8 +16,9 @@ highSelf = .90          #self-containment required for small areas"""
 highestPop = 25000      #highest population threshold"""
 lowSelf = .75           #lowest self-containment required"""
 
-minFlow = 0            #Default smallest flow considered
-fname = 'flows'        #Default name for CSV file containing flows
+minFlow = 20
+inputName = 'test'
+fname = 'test'
 
 slope = (-highSelf+lowSelf)/(highestPop - lowestPop)      #The decrease in required self-containment as areas grow smaller. """
 modifier = highSelf - (slope*lowestPop)                   #A modifier that's always equal to the highest level of self-containment if the lowest threshold is 0. """
@@ -34,9 +35,9 @@ noMatch = []
     2 - not clustered cluster
     4 - clustered cluster, used for tracking"""
 
-def main():
-    global areaArray, noMatch
-    input_file = csv.DictReader(open("ACSDflowsCSV_2016_CMA.csv"))
+def runSLAs():
+    global areaArray, noMatch,k, inputName
+    input_file = csv.DictReader(open(inputName))
 
     areaArray = []
     for i in range(1, endArea+1):       #Create an empty array for the flows and populate it with empty dictionary objects
@@ -286,6 +287,8 @@ def clusterAreas(seeking, match):
     newCluster["WELF"] = WELF
     newCluster["RW"] = RW
 
+    print "create new cluster", newClusterID
+
     for a in range(1, len(areaArray)+1): #tag all associated CSDs and clusters to remove them from later iterations
         area = areaArray[a-1]
         currentCluster = area["CLUSTER"]
@@ -335,13 +338,18 @@ def outputFiles():
 
     f.close()
 
-def main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90):
-    global lowestPop, highestPop, lowSelf, highSelf, fname, endArea
-    fname = inputFile
+def main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, lowestSelfContainment = 0.75, highestSelfContainment = 0.90, outputName = "SLA", minimumFlow = 20):
+    global inputName, endArea, lastClusterID, lowestPop, highestPop, lowSelf, highSelf, fname, minFlow, slope, modifier
+    inputName = inputFile
     endArea, lastClusterID = numberOfAreas, numberOfAreas
     lowestPop = lowestPopulation
     highestPop = highestPopulation
     lowSelf = lowestSelfContainment
     highSelf = highestSelfContainment
-    main()
+    fname = outputName
+    minFlow = minimumFlow
 
+    slope = (-highSelf+lowSelf)/(highestPop - lowestPop)
+    modifier = highSelf - (slope*lowestPop)
+
+    runSLAs()
