@@ -58,8 +58,8 @@ def runSLAs():
             resDict["CMA"] = row["RESCMA"]
             powDict["CMA"] = row["POWCMA"]
         except:
-            resDict["CMA"] = 0
-            powDict["CMA"] = 0
+            resDict["CMA"] = "0"
+            powDict["CMA"] = "0"
 
         resDict["RELF"] += flow
         resDict[powA] = flow
