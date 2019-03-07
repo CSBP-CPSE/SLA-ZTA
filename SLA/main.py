@@ -250,7 +250,7 @@ def searchStrength():
                 else:                           rightCalc = 0
                 connection = leftCalc + rightCalc
 
-                if(connection > strongestConnection) and powCMA == "0":
+                if(connection > strongestConnection) and (powCMA == "0" or powCMA == -10) and (resCMA == "0" or resCMA == -10):
                     strongestConnection = connection
                     strongestArea = matchArea["area"]
     return strongestArea
@@ -353,3 +353,5 @@ def main(inputFile, numberOfAreas, lowestPopulation=0, highestPopulation=25000, 
     modifier = highSelf - (slope*lowestPop)
 
     runSLAs()
+
+main("ACSDflowsCSV_2011.csv", 3216)
