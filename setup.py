@@ -8,4 +8,4 @@ setup(name='SLA-ZTA',
       author_email='anne.munro@canada.ca',
       license='MIT',
       packages=['SLA'],
-      zip_safe=False)
+      zip_safe=True)
