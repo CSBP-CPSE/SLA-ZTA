@@ -3,6 +3,9 @@ import csv
 import math
 import sys
 
+import time
+
+
 endArea = 4574
 lastClusterID = 4574
 
@@ -37,6 +40,13 @@ idList = []
     2 - not clustered cluster
     4 - clustered cluster, used for tracking"""
 
+timeSaved = 0
+def printTime():
+    global timeSaved
+    t = time.time() - timeSaved
+    timeSaved = time.time()
+    print t
+
 def runSLAs():
     global areaArray, noMatch,k, inputName, idList, endArea, lastClusterID
     input_file = csv.DictReader(open(inputName))
@@ -54,7 +64,6 @@ def runSLAs():
     for i in range(1, endArea+1):       #Create an empty array for the flows and populate it with empty dictionary objects
         pDict = {"area": i, "RELF": 0, "WELF": 0, "RW": 0, "TYPE": 0, "SUCCEEDED":0, "DISTANCE": 0, "NOTE": "", "CLUSTER": 0, "AREAA": 0, "AREAB":0, "CMA": -1}
         areaArray.append(pDict)
-        for j in range(1, endArea+1):       pDict[j] = 0
 
     input_file = csv.DictReader(open(inputName))
     for row in input_file:              #Fill the dictionary with information from the relevant flows
@@ -247,12 +256,15 @@ def searchStrength():
     seekingArea = areaArray[nextUnsuccessfulArea-1]
     strongestConnection = 0
     strongestArea       = 0
+    seekKeys = seekingArea.keys()
     for a in range(0, len(areaArray)):
         matchArea = areaArray[a]
         type = matchArea["TYPE"]
         if(matchArea != seekingArea and type in eligibleTypes): #if it's a different area and not part of a larger cluster, calculate the strength of the relationship.
-            resflow = seekingArea[matchArea["area"]]
-            powflow = matchArea[seekingArea["area"]]
+            if matchArea["area"] in seekKeys:                      resflow = seekingArea[matchArea["area"]]
+            else:                                                  resflow = 0
+            if seekingArea["area"] in matchArea.keys():            powflow = matchArea[seekingArea["area"]]
+            else:                                                  powflow = 0
             resCMA = seekingArea["CMA"]
             powCMA = matchArea["CMA"]
 
@@ -281,30 +293,56 @@ def clusterAreas(seeking, match):
 
     newCluster = {"area": newClusterID, "RELF": 0, "WELF": 0, "RW": 0, "TYPE": 2, "SUCCEEDED":0, "DISTANCE": 0, "NOTE": "", "CLUSTER": 0, "AREAA": seeking, "AREAB": match, "CMA": -10}
     RELF, WELF, RW = 0, 0, 0
+    seekKeys = seekingArea.keys()
+    matchKeys = matchArea.keys()
     for j in range(1, len(areaArray)+1): #create outflows for new area
         otherArea = areaArray[j-1]
         typeOA = otherArea["TYPE"]
         if(typeOA in eligibleTypes):
-            newCluster[j] = seekingArea[j] + matchArea[j]
-            RELF += seekingArea[j] + matchArea[j] #CHECK
+            seekFlow = 0
+            matchFlow = 0
+            if j in seekKeys: seekFlow = seekingArea[j]
+            if j in matchKeys:   matchFlow = matchArea[j]
+
+            newFlow = seekFlow + matchFlow
+            if newFlow > 0:      newCluster[j] = newFlow  #MEMORY FIX - CORRECT
+            RELF += seekFlow + matchFlow #CHECK
         else: newCluster[j] = -1
 
     for k in range(1, len(areaArray)+1): #create inflows for new area
         otherArea = areaArray[k-1]
         typeOA = otherArea["TYPE"]
         if(typeOA in eligibleTypes):
-            otherArea[newClusterID] = otherArea[seeking] + otherArea[match]
-            WELF += otherArea[seeking] + otherArea[match] #CHECK
+            otherSeekFlow = 0
+            otherMatchFlow = 0
+            otherKeys = otherArea.keys()
+            if seeking in otherKeys: otherSeekFlow = otherArea[seeking]
+            if match in otherKeys:   otherMatchFlow = otherArea[match]
+
+            newOtherFlow = otherSeekFlow + otherMatchFlow
+            if newOtherFlow > 0:
+                otherArea[newClusterID] =   otherSeekFlow + otherMatchFlow
+                WELF += otherSeekFlow + otherMatchFlow
         else:
             pass #don't create inflow for areas that have already been set to empty dicts
 
-    RW = seekingArea[seeking] + matchArea[match] + seekingArea[match] + matchArea[seeking] #create RW value for new cluster
+    RW1, RW2, RW3, RW4 = 0,0,0,0
+    seekKeys = seekingArea.keys()
+    matchKeys = matchArea.keys()
+    if(seeking in seekKeys):    RW1 = seekingArea[seeking]
+    if(match in matchKeys):     RW2 = matchArea[match]
+    if(match in seekKeys):      RW3 = seekingArea[match]
+    if(seeking in matchKeys):   RW4 = matchArea[seeking]
+
+    RW = RW1 + RW2 + RW3 + RW4
+    #RW = seekingArea[seeking] + matchArea[match] + seekingArea[match] + matchArea[seeking] #create RW value for new cluster
     newCluster[newClusterID] = RW
     newCluster["RELF"] = RELF
     newCluster["WELF"] = WELF
     newCluster["RW"] = RW
 
     print "create new cluster", newClusterID
+    #printTime()
 
     for a in range(1, len(areaArray)+1): #tag all associated CSDs and clusters to remove them from later iterations
         area = areaArray[a-1]
