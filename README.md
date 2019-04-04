@@ -57,5 +57,35 @@ Other optional variables can be used to customize the result:
 * outputName - the prefix that will be used for output files. Default "SLA".
 * minimumFlow - the smallest flow that can be considered bythe program. Default 20.
 
+## Usage
+
+Running the file produces three csv files with the prefix you selected or SLA by default. Those files are:
+
+* SLA
+* SLA-CLUSTERS
+* SLA-CSDS
+
+The SLA file contains all the areas and temporary clusters created through the process of running the program. Its main function is to allow you to track the formation of clusters and identify what connections were made in what order.
+
+The SLA-CLUSTERS file contains just the clusters along with information on their employment statistics.  
+
+The SLA-CSDS file is a listing of all unique areas fed into the program along with their cluster designation. This file is the most easily used for mapping or analysis.
+
+## Variables 
+
+SLA Variables: 
+* Area – internal code used by the SLA program
+* Code – your municipality code
+* Type – type of area – 1 is clustered, 0 is not. That should be all you get in this file, the ones you referenced would only appear in the other two files.
+* Cluster – the cluster to which it belongs. The codes are assigned sequentially.
+* Succeeded – 0, 1, 5 – if an area was self-contained on its own even before clustering. 0 if not, 1 if it was self-contained but still had connections to other areas, 5 if it was perfectly self-contained and had no flows outside its borders.
+
+Employment Variables:
+* RELF - Resident employed labor force, or the number of residents of that area that are employed.
+* WELF - Working employed labor force, or the number of persons employed within that geographic area.
+* RW - Resident and working labor force, or the number of persons who both live and work in that area.
+
+
+
 This code is created and maintained by the Centre for Special Business Projects, Statistics Canada.
 
