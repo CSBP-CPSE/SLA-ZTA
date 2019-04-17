@@ -89,7 +89,7 @@ def runSLAs():
         powDict["WELF"] += flow
 
     if outputFilesB: outputFiles()
-    numReps = 5000
+    numReps = 1000000000
     tracking = 0
     allSuccess = False
 
