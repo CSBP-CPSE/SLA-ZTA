@@ -5,7 +5,6 @@ import sys
 
 import time
 
-
 endArea = 4574
 lastClusterID = 4574
 
@@ -75,6 +74,9 @@ def runSLAs():
         resDict = areaArray[resA - 1]
         powDict = areaArray[powA - 1]
 
+        resDict["CMA"] = "0"
+        powDict["CMA"] = "0"
+
         try:
             if row["RESCMA"] != "0" or row["POWCMA"] != "0": flow = 0
             resDict["CMA"] = row["RESCMA"]
@@ -82,14 +84,14 @@ def runSLAs():
         except:
             resDict["CMA"] = "0"
             powDict["CMA"] = "0"
-
+        
         resDict["RELF"] += flow
         resDict[powA] = flow
         if(resA == powA): resDict["RW"] += flow
         powDict["WELF"] += flow
 
     if outputFilesB: outputFiles()
-    numReps = 1000000000
+    numReps = 5000000
     tracking = 0
     allSuccess = False
 
@@ -104,7 +106,6 @@ def runSLAs():
             if(match == 0): noMatch.append(nextUnsuccessfulArea)
             else:           clusterAreas(nextUnsuccessfulArea, match)
     outputClusters()
-    print "done!", lastClusterID, tracking
 
 def outputClusters():
     global idList
@@ -335,14 +336,10 @@ def clusterAreas(seeking, match):
     if(seeking in matchKeys):   RW4 = matchArea[seeking]
 
     RW = RW1 + RW2 + RW3 + RW4
-    #RW = seekingArea[seeking] + matchArea[match] + seekingArea[match] + matchArea[seeking] #create RW value for new cluster
     newCluster[newClusterID] = RW
     newCluster["RELF"] = RELF
     newCluster["WELF"] = WELF
     newCluster["RW"] = RW
-
-    print "create new cluster", newClusterID
-    #printTime()
 
     for a in range(1, len(areaArray)+1): #tag all associated CSDs and clusters to remove them from later iterations
         area = areaArray[a-1]
