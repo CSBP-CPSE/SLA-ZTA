@@ -32,18 +32,18 @@ to create self-contined labour areas for the municipalities of Canada.
 
 ## Usage
 
-First, install `SLA-ZTA`:
+First, install `SLAZTA`:
 
 ```
-$ pip install https://github.com/CSBP-CPSE/SLA-ZTA
+$ pip install SLAZTA
 ```
 
 Import the package into your program and call the clustering function as in the following example, using the default values for each variable:  
 
 ```
-from SLA-ZTA import SLA
+import SLAZTA
 
-SLA.main(2011Flows.csv, 0, 2500, 0.75, 0.90)
+SLAZTA.main('C:\\2011Flows.csv', 0, 2500, 0.75, 0.90)
 ```
 
 The only variable required to run the program is:
