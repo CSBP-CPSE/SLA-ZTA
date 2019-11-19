@@ -1,11 +1,13 @@
-from setuptools import setup
+from distutils.core import setup
 
-setup(name='SLA-ZTA',
-      version='3.2',
-      description='Self-Contained Labor Areas for Canada',
-      url='https://github.com/CSBP-CPSE/SLA-ZTA',
-      author='Ash Munro',
-      author_email='anne.munro@canada.ca',
-      license='MIT',
-      packages=['SLA'],
-      zip_safe=True)
+setup(
+    name='SLAZTA',
+    version='0.2',
+    author="Ash Munro",
+    author_email="anne.munro@canada.com",
+    packages=['SLAZTA',],
+    license='MIT License',
+    url='https://github.com/CSBP-CPSE/SLA-ZTA/',
+    description = 'SLAZTA is a tool to create self-contained areas from commuting data.',
+    long_description=open('README.txt').read(),
+)

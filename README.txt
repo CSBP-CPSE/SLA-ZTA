@@ -1,0 +1,5 @@
+The SLAZTA scripts are a set of tools used to create self-contained functional areas from commuting data. It is designed to take a set of commuting flows between areas of any type and group them into clusters eeting a user's definition for self-containment. A self-contained labour area is a territorial unit where most of the residents with jobs are working in the area and most of the jobs in the area are filled by workers residing in the area.
+
+Developed at the Centre for Special Business Projects, this is a experimental Python port of the original code implemented in SAS to create self-contined labour areas for the non-metropolitan municipalities of Canada.
+
+The only requirement to run the program is a commuting data file formatted as a CSV file with three columns: RES, POW, and TotalFlow. The RES and POW columns should contain a numeric code representing the origin and destination areas for the flow, while the TotalFlow column should contain the numeric value of that commuting flow.
